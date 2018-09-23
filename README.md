@@ -2,50 +2,33 @@
 
 ### Installation
 
-This crawler relies on you having the latest Python installed and accessible
-on your path.  You'll need to setup a virtual environment path to isolate deps.
+    pip install git+https://github.com/botlabio/adstxtcrawler.git
 
+This crawler relies on you having the latest Python installed and accessible on your path.  You'll need to setup a virtual environment path to isolate deps.
 
-```sh
-# Setup a virtualenv to use and activate it
-export ADSTXTCRAWLER_VENV=/tmp/adstxtcrawler-venv
-python3.7 -m venv $ADSTXTCRAWLER_VENV
-source $ADSTXTCRAWLER_VENV/bin/activate
-# Install the application.
-python setup.py install
-```
+### Use
 
-Data is written to a MariaDB/MySQL instance as provided by the database URI
-configurable.  Postgres is not supported at this instance but PRs are welcome.
+The usecase is where you have ae list of sites, and the crawler will check for ads.txt file in each of the sites in the list, and then store the results into a db.
 
+    # Setup a virtualenv to use and activate it
+    python3.7 -m venv adstxt_env
+    source adstxt_env/bin/activate
 
-### Running
+Data can be written to MariaDB or MySQL based on the db_uri parameter. The simplest example is to use sqlite:
 
-```sh
-adstxt --file --file_path=/tmp/adstxt_domains
-```
+    adstxt --file --file_path=/tmp/adstxt_domains --db_uri=sqlite:///name_of_file.db --crawler_tag=name_of_your_crawler
 
 This will start up the crawler, using the file argument and the specified path.
 
-The first time this runs depending upon the size of the list of domains this
-may take in the hours to write fetched data into MySQL.
+### Performance
 
-Alternatively Elastiscearch can be used to source the domain data from, this is
-however not recommended as it's had very little testing.  This can be accessed
-via the following
-
-```sh
-adstxt --es
-```
+The initial buildtime depends on the number of sites. Roughly speaking, several thousand sites may be processed per minute.
 
 ### Configuration
 
-Configuration is done either through CLI paramaters or using environment
-variables.  Required configuration is variable dependent upon configuration.
-The crawler currently either takes a single column CSV of domains, or an
-elasticsearch query which can return a list of domains.
+Configuration is done either through CLI paramaters or using environment variables.  Required configuration is variable dependent upon configuration. The crawler currently either takes a single column CSV of domains, or an elasticsearch query which can return a list of domains.
 
-Configuration options available are.
+#### Configuration paramaters
 
 | Configurable                    | Environment Variable  | Explanation                                                                           |
 | ------------------------------- | --------------------- | ------------------------------------------------------------------------------------- |
